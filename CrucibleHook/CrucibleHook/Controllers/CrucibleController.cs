@@ -3,13 +3,12 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Web.Configuration;
 using System.Web.Http;
-using CrucibleHook.Models;
 
 namespace CrucibleHook.Controllers
 {
     public class CrucibleController : ApiController
     {
-        public void Notify(string id, WebHookPush push)
+        public void Notify(string id)
         {
             var client = new WebClient();
 
@@ -17,7 +16,7 @@ namespace CrucibleHook.Controllers
 
             var url = BuildUrl(id);
 
-            client.UploadValues(url, "POST", new NameValueCollection());
+            client.UploadData(url, "POST", new byte[0]);
         }
 
         private static string BuildUrl(string repositoryName)
