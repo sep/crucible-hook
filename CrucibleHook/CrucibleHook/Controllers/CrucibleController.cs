@@ -3,20 +3,13 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Web.Configuration;
 using System.Web.Http;
+using CrucibleHook.Models;
 
 namespace CrucibleHook.Controllers
 {
     public class CrucibleController : ApiController
     {
-        /// <summary>
-        /// test
-        /// </summary>
-        /// <remarks>
-        /// GET api/crucible/jenkins-test
-        /// </remarks>
-        /// <param name="id">The name of the Crucible repository to notify</param>
-        [HttpGet]
-        public void Notify(string id)
+        public void Notify(string id, WebHookPush push)
         {
             var client = new WebClient();
 
@@ -27,11 +20,6 @@ namespace CrucibleHook.Controllers
             client.UploadValues(url, "POST", new NameValueCollection());
         }
 
-        /// <summary>
-        /// Builds the URL.
-        /// </summary>
-        /// <param name="repositoryName">Name of the repository in Crucible.</param>
-        /// <returns>A formatted URL.</returns>
         private static string BuildUrl(string repositoryName)
         {
             var baseUrl = WebConfigurationManager.AppSettings["CrucibleBaseUrl"];
@@ -40,10 +28,6 @@ namespace CrucibleHook.Controllers
             return url;
         }
 
-        /// <summary>
-        /// Setups the headers for the request.
-        /// </summary>
-        /// <param name="client">The client.</param>
         private static void SetupHeaders(WebClient client)
         {
             client.Headers[HttpRequestHeader.ContentType] = "application/json";
