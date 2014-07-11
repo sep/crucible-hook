@@ -1,22 +1,28 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Net;
 using System.Web.Configuration;
-using System.Web.Http;
 
 namespace CrucibleHook.Controllers
 {
-    public class CrucibleController : ApiController
+    public class CrucibleController : LoggingControllerBase
     {
         public void Notify(string id)
         {
-            var client = new WebClient();
+            try
+            {
+                var client = new WebClient();
 
-            SetupHeaders(client);
+                SetupHeaders(client);
 
-            var url = BuildUrl(id);
+                var url = BuildUrl(id);
 
-            client.UploadData(url, "POST", new byte[0]);
+                client.UploadData(url, "POST", new byte[0]);
+            }
+            catch (WebException ex)
+            {
+                Log.Error("Error communicating with Crucible", ex);
+                throw;
+            }
         }
 
         private static string BuildUrl(string repositoryName)
